@@ -1,5 +1,6 @@
 import pygame
 
+
 class Card:
     def __init__(self, image, sound, text, x, y, font, color):
         self.image = image
