@@ -28,7 +28,7 @@ card_data = [
     {"image": image3, "sound": sound3, "text": ""}
 ]
 
-# Шрифт для текста
+
 font = pygame.font.Font(None, 36)
 
 # Создание экземпляров карточек
