@@ -17,15 +17,23 @@ class Card:
 
         # Store original x and y positions
         self.original_x = x
-        self.original_y = y 
+        self.original_y = y
 
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
         self.growing = False
         self.moving_to_center = False
         self.z_index = 0
         self.center_time = None
-        self.shrinking = False # Add shrinking attribute
-        self.moving_back = False # Add moving_back attribute
+        self.shrinking = False
+        self.moving_back = False
+
+        # Add the flipping attribute
+        self.flipping = False
+        self.flip_angle = 0
+        self.flip_time = None
+
+        self.target_image = None
+        self.is_flipped = False  # Add a flag to check if the card is already flipped
 
     def is_clicked(self, mouse_pos):
         return self.rect.collidepoint(mouse_pos)

@@ -3,18 +3,18 @@ import time
 import pygame
 
 from cards import Card
-from main_menu import screen
+from main_menu import screen, play_background_music
 
 # Цвета
 white = (255, 255, 255)
 black = (0, 0, 0)
-green = (0, 255, 0)
+background = (255,251,213)
 red = (255, 0, 0)
 
 # Загрузка изображений
-image1 = pygame.image.load("assets/images/phrase/picture1.png").convert_alpha()
-image2 = pygame.image.load("assets/images/phrase/picture2.png").convert_alpha()
-image3 = pygame.image.load("assets/images/phrase/picture3.png").convert_alpha()
+image1 = pygame.image.load("assets/images/i_do/picture1.png").convert_alpha()
+image2 = pygame.image.load("assets/images/i_do/picture2.png").convert_alpha()
+image3 = pygame.image.load("assets/images/i_do/picture3.png").convert_alpha()
 
 # Загрузка звуковых эффектов
 sound1 = pygame.mixer.Sound("assets/sounds/sound1.wav")
@@ -43,13 +43,16 @@ for i, data in enumerate(card_data):
 
 # Игровой цикл
 clock = pygame.time.Clock()  # For animation
-def run(running):  # Accept running as an argument
+
+
+def run(running, pause_music, unpause_music):  # Accept running as an argument
     back_button = None
-    while running: # Use the passed running variable
+    play_background_music()
+    while running:  # Use the passed running variable
         # Обработка событий
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False # Set running to False to exit the game loop
+                running = False  # Set running to False to exit the game loop
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
                 for card in cards:
@@ -60,10 +63,16 @@ def run(running):  # Accept running as an argument
                         card.z_index = 100  # Move card to the top
                         card.center_time = time.time()  # Record the time when the card reached the center
                 if back_button and back_button.collidepoint(mouse_pos):
-                    running = False # Exit the game loop
+                    running = False  # Exit the game loop
+            # Handle window focus change
+            elif event.type == pygame.ACTIVEEVENT:
+                if event.state == 2:  # Minimized
+                    pause_music()
+                elif event.state == 1:  # Restored
+                    unpause_music()
 
         # Отрисовка фона
-        screen.fill(green)  # Задаем зеленый фон
+        screen.fill(background)  # Задаем зеленый фон
 
         # Sort cards by z_index (ascending order)
         cards.sort(key=lambda card: card.z_index)
@@ -126,8 +135,9 @@ def run(running):  # Accept running as an argument
         # Draw the back button
         back_button = pygame.Rect(10, 10, 150, 50)
         pygame.draw.rect(screen, white, back_button)
-        back_text = font.render("Back to Main Menu", True, black)
-        screen.blit(back_text, back_button.center)
+        back_text = font.render("Назад", True, black)
+        text_rect = back_text.get_rect(center=back_button.center)
+        screen.blit(back_text, text_rect)
 
         # Обновление экрана
         pygame.display.flip()

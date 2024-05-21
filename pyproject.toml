@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "defectolog"
+name = "defektolog"
 version = "0.1.0"
 description = ""
 authors = ["Джозеф <joy.life86@mail.ru>"]
