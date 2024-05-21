@@ -33,7 +33,7 @@
 
 ##  Автор
 
-Эта игра разработана [Джозеф].
+Эта игра разработана [[Джозеф](https://github.com/Joseph861020)].
 
 ---
 
@@ -66,4 +66,4 @@ This is a game that helps children with Alalia develop their phrase speech using
 
 ## Author
 
-This game was developed by [Джозеф].
+This game was developed by [[Джозеф](https://github.com/Joseph861020)].
