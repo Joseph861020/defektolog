@@ -90,7 +90,7 @@ def main():
                         # Start "Other Game 2" from a separate file
                         import other_game_2  # Import the other_game_2.py file
                         other_game_2.run(running, game_utils.pause_background_music,
-                                         game_utils.unpause_background_music)  # Call the run() function from other_game_2.py
+                                         game_utils.unpause_background_music)
             elif event.type == pygame.ACTIVEEVENT:
                 if event.state == 2:  # Minimized
                     game_utils.pause_background_music()

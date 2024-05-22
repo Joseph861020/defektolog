@@ -1,5 +1,4 @@
 import time
-
 import pygame
 
 from cards import Card
@@ -10,38 +9,93 @@ background = pygame.image.load('assets/images/background.jpg')
 buttons_color = (255, 251, 213)
 black = (0, 0, 0)
 
-# Загрузка изображений
-image1 = pygame.image.load("assets/images/i_do/picture1.png").convert_alpha()
-image2 = pygame.image.load("assets/images/i_do/picture2.png").convert_alpha()
-image3 = pygame.image.load("assets/images/i_do/picture3.png").convert_alpha()
+# Загрузка изображений семей
+baby_image = pygame.image.load("assets/images/people/baby.jpg").convert_alpha()
+father_image = pygame.image.load("assets/images/will_eat/father.png").convert_alpha()
+mother_image = pygame.image.load("assets/images/people/mother.png").convert_alpha()
+grandfather_image = pygame.image.load("assets/images/people/grandfather.png").convert_alpha()
+grandmother_image = pygame.image.load("assets/images/people/grandmother.jpg").convert_alpha()
+aunt_image = pygame.image.load("assets/images/people/aunt.png").convert_alpha()
+uncle_image = pygame.image.load("assets/images/people/uncle.png").convert_alpha()
+masha_image = pygame.image.load("assets/images/people/masha.jpg").convert_alpha()
+misha_image = pygame.image.load("assets/images/people/misha.jpg").convert_alpha()
+kisa_image = pygame.image.load("assets/images/people/kisa.jpg").convert_alpha()
+
+back_card_family = pygame.image.load("assets/images/people/back_card1.jpg").convert_alpha()
+back_card_action = pygame.image.load("assets/images/people/back_card0.jpg").convert_alpha()  # Back card for actions
+
+# Загрузка изображений действие
+image1 = pygame.image.load("assets/images/i_do/cary.png").convert_alpha()
+image2 = pygame.image.load("assets/images/i_do/eat.png").convert_alpha()
+image3 = pygame.image.load("assets/images/i_do/run.png").convert_alpha()
+image4 = pygame.image.load("assets/images/i_do/sing.png").convert_alpha()
+image5 = pygame.image.load("assets/images/i_do/sit.png").convert_alpha()
+image6 = pygame.image.load("assets/images/i_do/sleep.png").convert_alpha()
+image7 = pygame.image.load("assets/images/i_do/stand.png").convert_alpha()
+image8 = pygame.image.load("assets/images/i_do/walk.png").convert_alpha()
+image9 = pygame.image.load("assets/images/i_do/wash.png").convert_alpha()
+image10 = pygame.image.load("assets/images/i_do/drink.png").convert_alpha()
 
 # Загрузка звуковых эффектов
-sound1 = pygame.mixer.Sound("assets/sounds/sound1.wav")
-sound2 = pygame.mixer.Sound("assets/sounds/sound2.wav")
-sound3 = pygame.mixer.Sound("assets/sounds/sound3.wav")
+sound1 = pygame.mixer.Sound("assets/sounds/up.mp3")
 
-# Данные карточек
-card_data = [
-    {"image": image1, "sound": sound1, "text": ""},
-    {"image": image2, "sound": sound2, "text": ""},
-    {"image": image3, "sound": sound3, "text": ""}
-]
+images = [image1, image2, image3, image4, image5, image6, image7, image8, image9, image10]
 
 # Шрифт для текста
 font = pygame.font.Font(None, 36)
 
 # Создание экземпляров карточек
-card_width = 150
-card_height = 200
-cards = []
-for i, data in enumerate(card_data):
-    card_x = 100 + (i * (card_width + 100))  # Добавляем 100 пикселей между картами
-    card_y = 100
-    # Pass font and black to the Card constructor
-    cards.append(Card(data["image"], data["sound"], data["text"], card_x, card_y, font, black))
+card_width = 100
+card_height = 150
+family_spacing = 30
+family_row_y = 100
+action_row_y = family_row_y + card_height + family_spacing + 50  # Move action cards down by 50 pixels
+action_spacing = 50  # Space between action cards
+action_columns = 5  # Number of columns for action cards
+
+# Family cards
+family_member_cards = [
+    Card(back_card_family, sound1, None, 100 + i * (card_width + family_spacing), family_row_y, font, black)
+    for i in range(10)
+]
+
+# Assign the corresponding images to the cards
+family_member_images = [
+    baby_image,
+    father_image,
+    mother_image,
+    grandfather_image,
+    grandmother_image,
+    aunt_image,
+    uncle_image,
+    masha_image,
+    misha_image,
+    kisa_image
+]
+for i, card in enumerate(family_member_cards):
+    card.image = family_member_images[i]
+
+# Action cards
+action_cards = [
+    Card(back_card_action, sound1, "", 100 + (i % action_columns) * (250 + action_spacing),
+         action_row_y + (i // action_columns) * (250 + action_spacing), font, black)
+    for i in range(len(images))
+]
+
+# Assign the corresponding images to the cards
+for i, card in enumerate(action_cards):
+    card.image = images[i]  # Set the front image initially
+    card.width = 250  # Set the width of the action cards
+    card.height = 250  # Set the height of the action cards
+    card.original_width = card.width  # Store original width for scaling
+    card.original_height = card.height  # Store original height for scaling
+    card.original_x = card.x  # Store original x position for moving
+    card.original_y = card.y  # Store original y position for moving
 
 # Игровой цикл
 clock = pygame.time.Clock()  # For animation
+flip_duration = 1.8  # Duration of the flip animation in seconds
+center_duration = 3  # Duration to stay in the center
 
 
 def run(running, pause_music, unpause_music):  # Accept running as an argument
@@ -55,13 +109,28 @@ def run(running, pause_music, unpause_music):  # Accept running as an argument
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:  # Check for left mouse button click
                     mouse_pos = pygame.mouse.get_pos()
-                    for card in cards:
+                    for card in family_member_cards + action_cards:
                         if card.is_clicked(mouse_pos):
                             card.sound.play()
-                            card.growing = True  # Start the growing animation
-                            card.moving_to_center = True  # Start moving to the center
-                            card.z_index = 100  # Move card to the top
-                            card.center_time = time.time()  # Record the time when the card reached the center
+                            card.is_flipped = not card.is_flipped
+                            card.flip_time = time.time()
+
+                            # Turn back the previous flipped card in the same category
+                            if card in family_member_cards:
+                                for other_card in family_member_cards:
+                                    if other_card != card and other_card.is_flipped:
+                                        other_card.is_flipped = False
+                            else:
+                                for other_card in action_cards:
+                                    if other_card != card and other_card.is_flipped:
+                                        other_card.is_flipped = False
+
+                            # Move action card to center and grow
+                            if card in action_cards:
+                                card.moving_to_center = True
+                                card.growing = True
+                                card.center_time = time.time()
+
                     if back_button and back_button.collidepoint(mouse_pos):
                         running = False  # Exit the game loop
             # Handle window focus change
@@ -75,62 +144,85 @@ def run(running, pause_music, unpause_music):  # Accept running as an argument
         screen.blit(background, (0, 0))
 
         # Sort cards by z_index (ascending order)
+        cards = family_member_cards + action_cards
         cards.sort(key=lambda card: card.z_index)
 
         # Отрисовка карточек
         for card in cards:
-            # Movement to the center
-            if card.moving_to_center:
-                screen_center_x = screen.get_width() // 2
-                screen_center_y = screen.get_height() // 2
-                card.x += (screen_center_x - card.width // 2 - card.x) // 10  # Slower movement
-                card.y += (screen_center_y - card.height // 2 - card.y) // 10  # Slower movement
-                card.update_rect()  # Update the rectangle
-                if abs(card.x - (screen_center_x - card.width // 2)) < 5 and abs(
-                        card.y - (screen_center_y - card.height // 2)) < 5:
-                    card.moving_to_center = False  # Stop moving
-                    card.growing = True  # Start growing
+            # Draw the family member cards with flip animation
+            if card.is_flipped:
+                # Calculate the current flip progress (0-1)
+                flip_progress = min((time.time() - card.flip_time) / flip_duration, 1)
 
-            # Animation for growing
-            if card.growing:
-                if card.width < card.original_width * 2:  # Limit the max size
-                    card.width += 2  # Slower growth
-                    card.height += 2  # Slower growth
-                    card.update_rect()  # Update the rectangle
+                # Determine the rotation angle based on progress
+                rotation_angle = flip_progress * 360  # 360 degrees for a full flip
+
+                # Rotate the card image
+                rotated_image = pygame.transform.rotate(card.image, rotation_angle)
+
+                # Calculate the new position to keep the card centered
+                card_rect = rotated_image.get_rect(center=card.rect.center)
+
+                # Draw the rotated image at the adjusted position
+                screen.blit(rotated_image, card_rect)
+
+            else:
+                # If not flipped, use the back card image
+                if card in family_member_cards:
+                    card.image = back_card_family
                 else:
-                    card.growing = False  # Stop growing
-                    card.center_time = time.time()  # Record the time when the card reached its maximum size
+                    card.image = back_card_action
+                card.draw(screen)
 
-            # Stay in the center for 2 seconds
-            if card.center_time and time.time() - card.center_time > 2:
-                card.growing = False
-                card.shrinking = True  # Start shrinking
+            # Handle action card movement and growth
+            if card in action_cards:
+                if card.moving_to_center:
+                    screen_center_x = screen.get_width() // 2
+                    screen_center_y = screen.get_height() // 2  # Get the screen center y
 
-            # Animation for shrinking back
-            if card.shrinking and card.width > card.original_width:
-                card.width -= 2  # Slower shrinking
-                card.height -= 2  # Slower shrinking
-                card.update_rect()  # Update the rectangle
-                if card.width == card.original_width:
-                    card.width = card.original_width
-                    card.height = card.original_height
+                    card.x += (screen_center_x - card.width // 2 - card.x) // 10
+                    card.y += (screen_center_y - card.height // 2 - card.y) // 10  # Move card vertically to center
                     card.update_rect()  # Update the rectangle
-                    card.shrinking = False  # Stop shrinking
-                    card.moving_back = True  # Start moving back
 
-            # Move back to original position
-            if card.moving_back:
-                card.x += (card.original_x - card.x) // 10  # Slower movement
-                card.y += (card.original_y - card.y) // 10  # Slower movement
-                card.update_rect()
-                if abs(card.x - card.original_x) < 5 and abs(card.y - card.original_y) < 5:
-                    card.x = card.original_x  # Reset x
-                    card.y = card.original_y  # Reset y
+                    # Check if card is within 5 pixels of the center in both X and Y
+                    if abs(card.x - (screen_center_x - card.width // 2)) < 5 and abs(
+                            card.y - (screen_center_y - card.height // 2)) < 5:
+                        card.moving_to_center = False  # Stop moving
+                        card.growing = True  # Start growing
+                if card.growing:
+                    if card.width < card.original_width * 2:  # Limit the max size
+                        card.width += 2  # Slower growth
+                        card.height += 2  # Slower growth
+                        card.update_rect()  # Update the rectangle
+                    else:
+                        card.growing = False  # Stop growing
+                        card.center_time = time.time()  # Record the time when the card reached its maximum size
+                        card.z_index = 100  # Bring to front
+
+                # Stay in the center for 3 seconds
+                if card.center_time and time.time() - card.center_time > center_duration:
+                    card.shrinking = True  # Start shrinking
+                    card.z_index = 0  # Send to back
+
+                if card.shrinking and card.width > card.original_width:
+                    card.width -= 2  # Slower shrinking
+                    card.height -= 2  # Slower shrinking
+                    card.update_rect()  # Update the rectangle
+                    if card.width == card.original_width:
+                        card.width = card.original_width
+                        card.height = card.original_height
+                        card.update_rect()  # Update the rectangle
+                        card.shrinking = False  # Stop shrinking
+                        card.moving_back = True  # Start moving back
+                if card.moving_back:
+                    card.x += (card.original_x - card.x) // 10
+                    card.y += (card.original_y - card.y) // 10
                     card.update_rect()
-                    card.moving_back = False  # Stop moving back
-                    card.z_index = 0  # Reset z_index
-
-            card.draw(screen)
+                    if abs(card.x - card.original_x) < 5 and abs(card.y - card.original_y) < 5:
+                        card.x = card.original_x  # Reset x
+                        card.y = card.original_y  # Reset y
+                        card.update_rect()
+                        card.moving_back = False  # Stop moving back
 
         # Draw the back button
         back_button = pygame.Rect(10, 10, 150, 50)
@@ -138,6 +230,15 @@ def run(running, pause_music, unpause_music):  # Accept running as an argument
         back_text = font.render("Назад", True, black)
         text_rect = back_text.get_rect(center=back_button.center)
         screen.blit(back_text, text_rect)
+
+        # Check for flip completion
+        for card in family_member_cards + action_cards:
+            if card.is_flipped and (time.time() - card.flip_time) >= flip_duration:
+                # Update card.image to the corresponding food image after the animation
+                if card in family_member_cards:
+                    card.image = family_member_images[family_member_cards.index(card)]
+                else:
+                    card.image = images[action_cards.index(card)]
 
         # Обновление экрана
         pygame.display.flip()

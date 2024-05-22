@@ -9,18 +9,18 @@ buttons_color = (255, 251, 213)
 black = (0, 0, 0)
 
 # Загрузка изображений семей
-baby_image = pygame.image.load("assets/images/will_eat/baby.jpg").convert_alpha()
+baby_image = pygame.image.load("assets/images/people/baby.jpg").convert_alpha()
 father_image = pygame.image.load("assets/images/will_eat/father.png").convert_alpha()
-mother_image = pygame.image.load("assets/images/will_eat/mother.png").convert_alpha()
-grandfather_image = pygame.image.load("assets/images/will_eat/grandfather.png").convert_alpha()
-grandmother_image = pygame.image.load("assets/images/will_eat/grandmother.jpg").convert_alpha()
-aunt_image = pygame.image.load("assets/images/will_eat/aunt.png").convert_alpha()
-uncle_image = pygame.image.load("assets/images/will_eat/uncle.png").convert_alpha()
-masha_image = pygame.image.load("assets/images/will_eat/masha.jpg").convert_alpha()
-misha_image = pygame.image.load("assets/images/will_eat/misha.jpg").convert_alpha()
-kisa_image = pygame.image.load("assets/images/will_eat/kisa.jpg").convert_alpha()
+mother_image = pygame.image.load("assets/images/people/mother.png").convert_alpha()
+grandfather_image = pygame.image.load("assets/images/people/grandfather.png").convert_alpha()
+grandmother_image = pygame.image.load("assets/images/people/grandmother.jpg").convert_alpha()
+aunt_image = pygame.image.load("assets/images/people/aunt.png").convert_alpha()
+uncle_image = pygame.image.load("assets/images/people/uncle.png").convert_alpha()
+masha_image = pygame.image.load("assets/images/people/masha.jpg").convert_alpha()
+misha_image = pygame.image.load("assets/images/people/misha.jpg").convert_alpha()
+kisa_image = pygame.image.load("assets/images/people/kisa.jpg").convert_alpha()
 
-back_card_family = pygame.image.load("assets/images/will_eat/back_card1.jpg").convert_alpha()
+back_card_family = pygame.image.load("assets/images/people/back_card1.jpg").convert_alpha()
 
 # Загрузка изображений еды
 food_image_1 = pygame.image.load("assets/images/will_eat/food1.jpg").convert_alpha()
@@ -39,7 +39,7 @@ food_image_13 = pygame.image.load("assets/images/will_eat/drink1.jpg").convert_a
 food_image_14 = pygame.image.load("assets/images/will_eat/drink2.jpg").convert_alpha()
 food_image_15 = pygame.image.load("assets/images/will_eat/drink3.jpg").convert_alpha()
 food_image_16 = pygame.image.load("assets/images/will_eat/drink4.jpg").convert_alpha()
-back_card_food = pygame.image.load("assets/images/will_eat/back_card0.jpg").convert_alpha()
+back_card_food = pygame.image.load("assets/images/people/back_card0.jpg").convert_alpha()
 
 # Загрузка звуковых эффектов
 food_sound = pygame.mixer.Sound("assets/sounds/food_sound.mp3")
