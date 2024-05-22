@@ -3,13 +3,12 @@ import time
 import pygame
 
 from cards import Card
-from main_menu import screen, play_background_music
+from main_menu import screen
 
+background = pygame.image.load('assets/images/background.jpg')
 # Цвета
-white = (255, 255, 255)
+buttons_color = (255, 251, 213)
 black = (0, 0, 0)
-background = (255,251,213)
-red = (255, 0, 0)
 
 # Загрузка изображений
 image1 = pygame.image.load("assets/images/i_do/picture1.png").convert_alpha()
@@ -47,23 +46,24 @@ clock = pygame.time.Clock()  # For animation
 
 def run(running, pause_music, unpause_music):  # Accept running as an argument
     back_button = None
-    play_background_music()
+    # play_background_music() # This is now in game_utils
     while running:  # Use the passed running variable
         # Обработка событий
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False  # Set running to False to exit the game loop
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                mouse_pos = pygame.mouse.get_pos()
-                for card in cards:
-                    if card.is_clicked(mouse_pos):
-                        card.sound.play()
-                        card.growing = True  # Start the growing animation
-                        card.moving_to_center = True  # Start moving to the center
-                        card.z_index = 100  # Move card to the top
-                        card.center_time = time.time()  # Record the time when the card reached the center
-                if back_button and back_button.collidepoint(mouse_pos):
-                    running = False  # Exit the game loop
+                if event.button == 1:  # Check for left mouse button click
+                    mouse_pos = pygame.mouse.get_pos()
+                    for card in cards:
+                        if card.is_clicked(mouse_pos):
+                            card.sound.play()
+                            card.growing = True  # Start the growing animation
+                            card.moving_to_center = True  # Start moving to the center
+                            card.z_index = 100  # Move card to the top
+                            card.center_time = time.time()  # Record the time when the card reached the center
+                    if back_button and back_button.collidepoint(mouse_pos):
+                        running = False  # Exit the game loop
             # Handle window focus change
             elif event.type == pygame.ACTIVEEVENT:
                 if event.state == 2:  # Minimized
@@ -72,7 +72,7 @@ def run(running, pause_music, unpause_music):  # Accept running as an argument
                     unpause_music()
 
         # Отрисовка фона
-        screen.fill(background)  # Задаем зеленый фон
+        screen.blit(background, (0, 0))
 
         # Sort cards by z_index (ascending order)
         cards.sort(key=lambda card: card.z_index)
@@ -134,7 +134,7 @@ def run(running, pause_music, unpause_music):  # Accept running as an argument
 
         # Draw the back button
         back_button = pygame.Rect(10, 10, 150, 50)
-        pygame.draw.rect(screen, white, back_button)
+        pygame.draw.rect(screen, buttons_color, back_button)
         back_text = font.render("Назад", True, black)
         text_rect = back_text.get_rect(center=back_button.center)
         screen.blit(back_text, text_rect)
