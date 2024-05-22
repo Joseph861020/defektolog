@@ -10,7 +10,7 @@ info = pygame.display.Info()
 screen_width = info.current_w
 screen_height = info.current_h
 screen = pygame.display.set_mode((screen_width - 10, screen_height - 50), pygame.RESIZABLE)
-pygame.display.set_caption("Дефектолог")
+pygame.display.set_caption("Игра для развития речи")
 game_icon = pygame.image.load('assets/images/game_icon.png')
 pygame.display.set_icon(game_icon)
 background = pygame.image.load('assets/images/background.jpg')
@@ -25,12 +25,12 @@ font = pygame.font.Font(None, 36)
 # Define buttons globally
 card_game_button = None
 will_eat_button = None
-other_game_button_2 = None
+wash_button_2 = None
 
 
 # Function to display the main menu
 def display_main_menu():
-    global card_game_button, will_eat_button, other_game_button_2  # Declare variables as global
+    global card_game_button, will_eat_button, wash_button_2  # Declare variables as global
     # Draw the background
     screen.blit(background, (0, 0))
 
@@ -41,7 +41,7 @@ def display_main_menu():
     # "Card Game" button
     card_game_button = pygame.Rect(screen.get_width() // 2 - 150, 200, 300, 50)
     pygame.draw.rect(screen, buttons_color, card_game_button)  # Draw the white rectangle for the button
-    card_game_text = font.render("Карточная игра", True, black)
+    card_game_text = font.render("Делать", True, black)
     text_rect = card_game_text.get_rect(center=card_game_button.center)  # Get the center of the button
     screen.blit(card_game_text, text_rect)  # Blit the text at the center of the button
 
@@ -53,16 +53,16 @@ def display_main_menu():
     screen.blit(will_eat_text, text_rect)  # Blit the text at the center of the button
 
     # "Other Game 2" button
-    other_game_button_2 = pygame.Rect(screen.get_width() // 2 - 150, 400, 300, 50)
-    pygame.draw.rect(screen, buttons_color, other_game_button_2)
-    other_game_text_2 = font.render("Другая игра 2", True, black)
-    text_rect = other_game_text_2.get_rect(center=other_game_button_2.center)  # Get the center of the button
+    wash_button_2 = pygame.Rect(screen.get_width() // 2 - 150, 400, 300, 50)
+    pygame.draw.rect(screen, buttons_color, wash_button_2)
+    other_game_text_2 = font.render("Мыть", True, black)
+    text_rect = other_game_text_2.get_rect(center=wash_button_2.center)  # Get the center of the button
     screen.blit(other_game_text_2, text_rect)  # Blit the text at the center of the button
 
 
 # Main game function
 def main():
-    global card_game_button, will_eat_button, other_game_button_2
+    global card_game_button, will_eat_button, wash_button_2
     running = True
     game_utils.play_background_music()
     while running:
@@ -77,20 +77,24 @@ def main():
                     if card_game_button.collidepoint(mouse_pos):
                         # Start the card game from a separate file
                         import i_do  # Import the card_game.py file
-                        i_do.run(running, game_utils.pause_background_music,
-                                 game_utils.unpause_background_music)  # Call the run() function from card_game.py
+                        i_do.run(game_utils.pause_background_music,
+                                 game_utils.unpause_background_music,
+                                 game_utils.unpause_background_music)  # Pass both pause and unpause functions
+                        # Don't exit the main menu loop yet, wait for the game to return
                     # Check if "Other Game 1" button is clicked
                     elif will_eat_button.collidepoint(mouse_pos):
                         # Start "Other Game 1" from a separate file
                         import will_eat  # Import the other_game_1.py file
-                        will_eat.run(running, game_utils.pause_background_music,
-                                     game_utils.unpause_background_music)  # Call the run() function from other_game_1.py
+                        will_eat.run(game_utils.pause_background_music,
+                                     game_utils.unpause_background_music, game_utils.unpause_background_music)  # Call the run() function from other_game_1.py
+                        # Don't exit the main menu loop yet, wait for the game to return
                     # Check if "Other Game 2" button is clicked
-                    elif other_game_button_2.collidepoint(mouse_pos):
+                    elif wash_button_2.collidepoint(mouse_pos):
                         # Start "Other Game 2" from a separate file
-                        import other_game_2  # Import the other_game_2.py file
-                        other_game_2.run(running, game_utils.pause_background_music,
-                                         game_utils.unpause_background_music)
+                        import wash  # Import the other_game_2.py file
+                        # Call the run() function from wash.py. This will return when the game loop ends.
+                        wash.run(game_utils.pause_background_music,
+                                 game_utils.unpause_background_music, game_utils.unpause_background_music)
             elif event.type == pygame.ACTIVEEVENT:
                 if event.state == 2:  # Minimized
                     game_utils.pause_background_music()
@@ -99,7 +103,6 @@ def main():
         # Draw the main menu
         display_main_menu()
         pygame.display.flip()  # Call flip outside of display_main_menu()
-
 
 # Start the game
 if __name__ == "__main__":

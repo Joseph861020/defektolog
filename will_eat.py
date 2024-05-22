@@ -2,16 +2,15 @@ import time
 import pygame
 
 from cards import Card
-from main_menu import screen, background
+from main_menu import screen, background, font, black  # Import font and black
 
 # Цвета
 buttons_color = (255, 251, 213)
-black = (0, 0, 0)
 
 # Загрузка изображений семей
-baby_image = pygame.image.load("assets/images/people/baby.jpg").convert_alpha()
-father_image = pygame.image.load("assets/images/will_eat/father.png").convert_alpha()
-mother_image = pygame.image.load("assets/images/people/mother.png").convert_alpha()
+baby_image = pygame.image.load("assets/images/people/baby.png").convert_alpha()
+father_image = pygame.image.load("assets/images/people/father.jpg").convert_alpha()
+mother_image = pygame.image.load("assets/images/people/mother.jpg").convert_alpha()
 grandfather_image = pygame.image.load("assets/images/people/grandfather.png").convert_alpha()
 grandmother_image = pygame.image.load("assets/images/people/grandmother.jpg").convert_alpha()
 aunt_image = pygame.image.load("assets/images/people/aunt.png").convert_alpha()
@@ -20,7 +19,7 @@ masha_image = pygame.image.load("assets/images/people/masha.jpg").convert_alpha(
 misha_image = pygame.image.load("assets/images/people/misha.jpg").convert_alpha()
 kisa_image = pygame.image.load("assets/images/people/kisa.jpg").convert_alpha()
 
-back_card_family = pygame.image.load("assets/images/people/back_card1.jpg").convert_alpha()
+back_card_family = pygame.image.load("assets/images/will_eat/back_card1.jpg").convert_alpha()
 
 # Загрузка изображений еды
 food_image_1 = pygame.image.load("assets/images/will_eat/food1.jpg").convert_alpha()
@@ -39,14 +38,13 @@ food_image_13 = pygame.image.load("assets/images/will_eat/drink1.jpg").convert_a
 food_image_14 = pygame.image.load("assets/images/will_eat/drink2.jpg").convert_alpha()
 food_image_15 = pygame.image.load("assets/images/will_eat/drink3.jpg").convert_alpha()
 food_image_16 = pygame.image.load("assets/images/will_eat/drink4.jpg").convert_alpha()
-back_card_food = pygame.image.load("assets/images/people/back_card0.jpg").convert_alpha()
+back_card_food = pygame.image.load("assets/images/will_eat/back_card0.jpg").convert_alpha()
 
 # Загрузка звуковых эффектов
 food_sound = pygame.mixer.Sound("assets/sounds/food_sound.mp3")
 family_sound = pygame.mixer.Sound("assets/sounds/family.mp3")
 
 # Шрифт для текста
-font = pygame.font.Font(None, 36)
 
 # Создание экземпляров карточек
 card_width = 100
@@ -56,17 +54,25 @@ family_row_y = 100
 food_spacing = 100  # Reduced spacing for food cards
 row_spacing = 50
 # Create family member cards
+# Family member cards
 family_member_cards = [
-    Card(back_card_family, family_sound, None, 200, family_row_y, font, black),  # Baby card
-    Card(back_card_family, family_sound, None, 200 + card_width + family_spacing, family_row_y, font, black),  # Father
-    Card(back_card_family, family_sound, None, 200 + 2 * (card_width + family_spacing), family_row_y, font, black),  # Mother
-    Card(back_card_family, family_sound, None, 200 + 3 * (card_width + family_spacing), family_row_y, font, black),  # Grandfather
-    Card(back_card_family, family_sound, None, 200 + 4 * (card_width + family_spacing), family_row_y, font, black),  # Grandmother
-    Card(back_card_family, family_sound, None, 200 + 5 * (card_width + family_spacing), family_row_y, font, black),  # Aunt
-    Card(back_card_family, family_sound, None, 200 + 6 * (card_width + family_spacing), family_row_y, font, black),  # Uncle
-    Card(back_card_family, family_sound, None, 200 + 7 * (card_width + family_spacing), family_row_y, font, black),  # Masha
-    Card(back_card_family, family_sound, None, 200 + 8 * (card_width + family_spacing), family_row_y, font, black),  # Misha
-    Card(back_card_family, family_sound, None, 200 + 9 * (card_width + family_spacing), family_row_y, font, black),  # Kisa
+    Card(back_card_family, family_sound, None, 180, family_row_y, card_width, card_height, font, black),
+    Card(back_card_family, family_sound, None, 180 + card_width + family_spacing, family_row_y, card_width, card_height,
+         font, black),
+    Card(back_card_family, family_sound, None, 180 + 2 * (card_width + family_spacing), family_row_y, card_width,
+         card_height, font, black),
+    Card(back_card_family, family_sound, None, 180 + 3 * (card_width + family_spacing), family_row_y, card_width,
+         card_height, font, black),
+    Card(back_card_family, family_sound, None, 180 + 4 * (card_width + family_spacing), family_row_y, card_width,
+         card_height, font, black),
+    Card(back_card_family, family_sound, None, 180 + 5 * (card_width + family_spacing), family_row_y, card_width,
+         card_height, font, black),
+    Card(back_card_family, family_sound, None, 180 + 6 * (card_width + family_spacing), family_row_y, card_width,
+         card_height, font, black),
+    Card(back_card_family, family_sound, None, 180 + 7 * (card_width + family_spacing), family_row_y, card_width,
+         card_height, font, black),
+    Card(back_card_family, family_sound, None, 180 + 8 * (card_width + family_spacing), family_row_y, card_width,
+         card_height, font, black),
 ]
 
 # Assign the corresponding images to the cards
@@ -111,7 +117,7 @@ for i in range(len(food_images)):
     card_x = 200 + (i % food_columns * (card_width + food_spacing))  # Arrange cards in 4 columns with spacing
     card_y = family_row_y + card_height + family_spacing + (
             i // food_columns * (card_height + row_spacing))  # Arrange cards in 2 rows with spacing
-    food_cards.append(Card(back_card_food, food_sound, "", card_x, card_y, font, black))  # Start with the back card
+    food_cards.append(Card(back_card_food, food_sound, "", card_x, card_y, card_width, card_height, font, black))  # Start with the back card
 
 # Игровой цикл
 clock = pygame.time.Clock()  # For animation
@@ -121,11 +127,12 @@ flip_duration = 1.8  # Duration of the flip animation in seconds
 def run(running, pause_music, unpause_music):  # Accept running as an argument
     back_button = None
     # play_background_music() # This is now in game_utils
-    while running:  # Use the passed running variable
+    while running:
         # Обработка событий
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False  # Set running to False to exit the game loop
+            if event.type == pygame.QUIT:  # Handle QUIT event here
+                pygame.quit()
+                quit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:  # Check for left mouse button click
                     mouse_pos = pygame.mouse.get_pos()
@@ -149,8 +156,8 @@ def run(running, pause_music, unpause_music):  # Accept running as an argument
                                 if other_card != card and other_card.is_flipped:
                                     other_card.is_flipped = False
 
-                    if back_button and back_button.collidepoint(mouse_pos):
-                        running = False  # Exit the game loop
+                    if back_button.collidepoint(mouse_pos):
+                        running = False
             # Handle window focus change
             elif event.type == pygame.ACTIVEEVENT:
                 if event.state == 2:  # Minimized

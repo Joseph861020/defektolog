@@ -2,17 +2,18 @@ import time
 import pygame
 
 from cards import Card
-from main_menu import screen
+from main_menu import screen, black, font
+
 
 background = pygame.image.load('assets/images/background.jpg')
 # Цвета
 buttons_color = (255, 251, 213)
-black = (0, 0, 0)
+
 
 # Загрузка изображений семей
-baby_image = pygame.image.load("assets/images/people/baby.jpg").convert_alpha()
-father_image = pygame.image.load("assets/images/will_eat/father.png").convert_alpha()
-mother_image = pygame.image.load("assets/images/people/mother.png").convert_alpha()
+baby_image = pygame.image.load("assets/images/people/baby.png").convert_alpha()
+father_image = pygame.image.load("assets/images/people/father.jpg").convert_alpha()
+mother_image = pygame.image.load("assets/images/people/mother.jpg").convert_alpha()
 grandfather_image = pygame.image.load("assets/images/people/grandfather.png").convert_alpha()
 grandmother_image = pygame.image.load("assets/images/people/grandmother.jpg").convert_alpha()
 aunt_image = pygame.image.load("assets/images/people/aunt.png").convert_alpha()
@@ -21,8 +22,8 @@ masha_image = pygame.image.load("assets/images/people/masha.jpg").convert_alpha(
 misha_image = pygame.image.load("assets/images/people/misha.jpg").convert_alpha()
 kisa_image = pygame.image.load("assets/images/people/kisa.jpg").convert_alpha()
 
-back_card_family = pygame.image.load("assets/images/people/back_card1.jpg").convert_alpha()
-back_card_action = pygame.image.load("assets/images/people/back_card0.jpg").convert_alpha()  # Back card for actions
+back_card_family = pygame.image.load("assets/images/i_do/card_back0.png").convert_alpha()
+back_card_action = pygame.image.load("assets/images/i_do/card_back1.png").convert_alpha()  # Back card for actions
 
 # Загрузка изображений действие
 image1 = pygame.image.load("assets/images/i_do/cary.png").convert_alpha()
@@ -41,8 +42,6 @@ sound1 = pygame.mixer.Sound("assets/sounds/up.mp3")
 
 images = [image1, image2, image3, image4, image5, image6, image7, image8, image9, image10]
 
-# Шрифт для текста
-font = pygame.font.Font(None, 36)
 
 # Создание экземпляров карточек
 card_width = 100
@@ -52,11 +51,26 @@ family_row_y = 100
 action_row_y = family_row_y + card_height + family_spacing + 50  # Move action cards down by 50 pixels
 action_spacing = 50  # Space between action cards
 action_columns = 5  # Number of columns for action cards
-
-# Family cards
+family_sound = pygame.mixer.Sound("assets/sounds/family.mp3")
+# Family member cards
 family_member_cards = [
-    Card(back_card_family, sound1, None, 100 + i * (card_width + family_spacing), family_row_y, font, black)
-    for i in range(10)
+    Card(back_card_family, family_sound, None, 180, family_row_y, card_width, card_height, font, black),
+    Card(back_card_family, family_sound, None, 180 + card_width + family_spacing, family_row_y, card_width, card_height,
+         font, black),
+    Card(back_card_family, family_sound, None, 180 + 2 * (card_width + family_spacing), family_row_y, card_width,
+         card_height, font, black),
+    Card(back_card_family, family_sound, None, 180 + 3 * (card_width + family_spacing), family_row_y, card_width,
+         card_height, font, black),
+    Card(back_card_family, family_sound, None, 180 + 4 * (card_width + family_spacing), family_row_y, card_width,
+         card_height, font, black),
+    Card(back_card_family, family_sound, None, 180 + 5 * (card_width + family_spacing), family_row_y, card_width,
+         card_height, font, black),
+    Card(back_card_family, family_sound, None, 180 + 6 * (card_width + family_spacing), family_row_y, card_width,
+         card_height, font, black),
+    Card(back_card_family, family_sound, None, 180 + 7 * (card_width + family_spacing), family_row_y, card_width,
+         card_height, font, black),
+    Card(back_card_family, family_sound, None, 180 + 8 * (card_width + family_spacing), family_row_y, card_width,
+         card_height, font, black),
 ]
 
 # Assign the corresponding images to the cards
@@ -78,7 +92,7 @@ for i, card in enumerate(family_member_cards):
 # Action cards
 action_cards = [
     Card(back_card_action, sound1, "", 100 + (i % action_columns) * (250 + action_spacing),
-         action_row_y + (i // action_columns) * (250 + action_spacing), font, black)
+         action_row_y + (i // action_columns) * (250 + action_spacing), 250, 250, font, black)  # Pass font and color
     for i in range(len(images))
 ]
 
@@ -105,7 +119,8 @@ def run(running, pause_music, unpause_music):  # Accept running as an argument
         # Обработка событий
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False  # Set running to False to exit the game loop
+                pygame.quit()
+                quit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:  # Check for left mouse button click
                     mouse_pos = pygame.mouse.get_pos()
